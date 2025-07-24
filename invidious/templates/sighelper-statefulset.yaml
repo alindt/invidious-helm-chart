@@ -34,6 +34,10 @@ spec:
             - name: sighelper
               containerPort: 12999
               protocol: TCP
+          {{- with .Values.sighelper.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           livenessProbe:
             tcpSocket:
               port: 12999

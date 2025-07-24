@@ -98,6 +98,8 @@ config:
   full_refresh: false
   feed_threads: 1
 
+env: []
+
 sighelper:
   enabled: true
   resources: {}
@@ -107,3 +109,4 @@ sighelper:
     repository: quay.io/invidious/inv-sig-helper
     tag: latest
     pullPolicy: Always
+  env: []
