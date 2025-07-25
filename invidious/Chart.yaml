@@ -13,8 +13,6 @@ dependencies:
     repository: "oci://registry-1.docker.io/bitnamicharts"
     condition: postgresql.enabled
 
-engine: gotpl
-
 keywords:
   - youtube
   - proxy
