@@ -67,7 +67,6 @@ tolerations: []
 
 affinity: {}
 
-
 # Reference: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:
   enabled: true

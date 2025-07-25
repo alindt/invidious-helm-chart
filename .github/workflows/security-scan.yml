@@ -1,0 +1,53 @@
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+  schedule:
+    # Run weekly on Sundays
+    - cron: '0 0 * * 0'
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Check for secrets in code
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: .
+          base: HEAD~1
+          head: HEAD
+          extra_args: --only-verified
+
+      - name: Check for hardcoded secrets
+        run: |
+          # Check for potential secrets in values files
+          if grep -r "password.*:" invidious/values.yaml; then
+            echo "Warning: Potential hardcoded passwords found in values.yaml"
+            exit 1
+          fi
+
+          # Check for potential secrets in templates
+          if grep -r "password.*:" invidious/templates/; then
+            echo "Warning: Potential hardcoded passwords found in templates"
+            exit 1
+          fi

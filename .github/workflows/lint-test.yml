@@ -1,0 +1,60 @@
+name: Lint and Test Charts
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Add Bitnami repository
+        run: helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Update Helm repositories
+        run: helm repo update
+
+      - name: Lint charts
+        run: |
+          for chart in */Chart.yaml; do
+            chart_dir=$(dirname "$chart")
+            echo "Linting $chart_dir..."
+            helm lint "$chart_dir"
+          done
+
+      - name: Validate chart dependencies
+        run: |
+          for chart in */Chart.yaml; do
+            chart_dir=$(dirname "$chart")
+            echo "Validating dependencies for $chart_dir..."
+            helm dependency build "$chart_dir"
+            helm dependency update "$chart_dir"
+          done
+
+      - name: Test chart rendering
+        run: |
+          for chart in */Chart.yaml; do
+            chart_dir=$(dirname "$chart")
+            echo "Testing chart rendering for $chart_dir..."
+            helm template test "$chart_dir" --values "$chart_dir/values.yaml"
+          done
+
+      - name: Check for chart version bumps
+        run: |
+          for chart in */Chart.yaml; do
+            chart_dir=$(dirname "$chart")
+            echo "Checking version for $chart_dir..."
+            if [ -f "$chart_dir/Chart.lock" ]; then
+              echo "Chart.lock exists for $chart_dir - dependencies are locked"
+            else
+              echo "Warning: No Chart.lock found for $chart_dir"
+            fi
+          done

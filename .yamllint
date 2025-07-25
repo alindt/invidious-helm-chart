@@ -1,0 +1,57 @@
+extends: default
+
+exclude:
+  - invidious/templates/
+  - '*.tpl'
+
+rules:
+  # Helm charts often have long lines
+  line-length:
+    max: 120
+    level: warning
+
+  # Allow trailing spaces in some contexts
+  trailing-spaces:
+    level: warning
+
+  # Allow tabs in some contexts
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  # Allow document start
+  document-start:
+    present: false
+
+  # Allow comments
+  comments:
+    min-spaces-from-content: 1
+
+  # Allow empty lines
+  empty-lines:
+    max: 1
+    max-end: 1
+
+  # Allow hyphens in keys
+  hyphens:
+    max-spaces-after: 1
+
+  # Allow colons in keys
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: 1
+
+  # Allow commas in sequences
+  commas:
+    max-spaces-before: 0
+    min-spaces-after: 1
+
+  # Allow brackets
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Allow braces
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
