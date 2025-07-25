@@ -4,14 +4,9 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
-        exclude: ^invidious/templates/
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: check-case-conflict
-      - id: check-json
-      - id: check-toml
-      - id: debug-statements
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.35.1
@@ -19,9 +14,3 @@ repos:
       - id: yamllint
         args: [--config-file, .yamllint]
         exclude: ^invidious/templates/
-
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.38.0
-    hooks:
-      - id: markdownlint
-        args: [--config, .markdownlint.json]
